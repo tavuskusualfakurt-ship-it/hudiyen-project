@@ -376,6 +376,13 @@ const PAY_ITEMS = ["Harita", "Mimari proje", "Elektrik projesi", "Mekanik projes
 // docs: indirilebilir belgeler. Anahtar aşama numarasıdır (0'dan başlar: 0=Sözleşme, 1=İmar ve rölöve, 2=Avan proje ...).
 // Belgeler sadece o aşama %100 olunca görünür. f: dosyanın index.html'e göre yolu (pdf veya dwg).
 const PROJECTS = [
+  {ada:156, parsel:2, mahalle:"", title:"GARAJ YAPIMI",
+   stagesDef:[{n:"Harita",w:15},{n:"Mimari",w:25},{n:"Statik",w:15},{n:"Zemin etüdü",w:10},{n:"Elektrik",w:10},{n:"Mekanik",w:10},{n:"Belediye harçları",w:15}],
+   stages:[0,0,0,0,0,0,0], updated:"2026-10-16",
+   payItems:["Harita","Mimari","Statik","Zemin etüdü","Elektrik","Mekanik","Belediye harçları"],
+   pay:[[0,44000],[0,65000],null,[0,45000],[0,25000],[0,15000],null],
+   payNotes:{3:"Araştırma çukuru için 45.000 ₺ (kepçe dahil değildir). Sondaj yapılırsa 100.000 ₺."},
+   note:"Zemin etüdü bedeli araştırma çukuru esas alınarak yazılmıştır. Sondaj yapılması durumunda 100.000 ₺ olur. Kepçe bedeli ayrıca ödenir."},
   {ada:604, parsel:44, mahalle:"Örnek Mah. / Kadıköy", title:"Yıldız Evleri, 6 katlı konut",
    stages:[100,100,100,70,40,0,0], updated:"2026-10-05",
    docs:{1:[{n:"Rölöve",f:"belgeler/604-44-k7x2m9/rolove.pdf"},{n:"Rölöve",f:"belgeler/604-44-k7x2m9/rolove.dwg"}],2:[{n:"Avan proje",f:"belgeler/604-44-k7x2m9/avan-proje.pdf"},{n:"Avan proje",f:"belgeler/604-44-k7x2m9/avan-proje.dwg"}]},
@@ -526,7 +533,7 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=id=>document.getElementById(id);
 const MONTHS=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const fmtDate=s=>{const d=new Date(s+'T00:00:00');return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;};
-const total=p=>Math.round(STAGES.reduce((a,s,i)=>a+s.w*p.stages[i]/100,0));
+const total=p=>Math.round((p.stagesDef||STAGES).reduce((a,s,i)=>a+s.w*p.stages[i]/100,0));
 
 function countTo(el,to,dur=1800){
   if(reduce){el.textContent=to;return;}
@@ -552,7 +559,7 @@ function moneyTo(el,to,dur=1800){
 
 function payHtml(p){
   if(!p.pay)return '';
-  const rows=PAY_ITEMS.map((n,i)=>({n,v:p.pay[i]})).filter(r=>r.v);
+  const rows=(p.payItems||PAY_ITEMS).map((n,i)=>({n,v:p.pay[i],t:p.payNotes&&p.payNotes[i]})).filter(r=>r.v);
   if(!rows.length)return '';
   const tot=rows.reduce((a,r)=>a+r.v[1],0),paid=rows.reduce((a,r)=>a+r.v[0],0),left=tot-paid;
   const pc=tot?Math.round(paid/tot*100):0;
@@ -561,7 +568,7 @@ function payHtml(p){
     const st=l<=0?'Tamamı ödendi':a>0?'Kısmi ödeme':'Ödeme bekleniyor';
     return `<li class="pitem" style="--i:${i}"><div class="row"><b>${r.n}</b><span>${st}</span></div>
       <div class="bar" role="progressbar" aria-valuenow="${q}" aria-valuemin="0" aria-valuemax="100" aria-label="${r.n} ödeme durumu"><i style="--p:${q}"></i></div>
-      <div class="pm"><span>Ödenen <b>${TL(a)}</b></span><span>Kalan <b>${TL(l)}</b></span><span>Toplam <b>${TL(t)}</b></span></div></li>`;
+      <div class="pm"><span>Ödenen <b>${TL(a)}</b></span><span>Kalan <b>${TL(l)}</b></span><span>Toplam <b>${TL(t)}</b></span></div>${r.t?`<p class="pm">${r.t}</p>`:''}</li>`;
   }).join('');
   return `<div class="pay"><h3>Ödemeler</h3>
     <div class="sum"><div><span>Toplam bedel</span><b data-money="${tot}">0 ₺</b></div><div class="paid"><span>Alınan ödeme</span><b data-money="${paid}">0 ₺</b></div><div><span>Kalan ödeme</span><b data-money="${left}">0 ₺</b></div></div>
@@ -581,7 +588,7 @@ function docsHtml(p,i,v){
 
 function panel(p){
   const done=total(p),left=100-done,C=2*Math.PI*88;
-  const rows=STAGES.map((s,i)=>{
+  const rows=(p.stagesDef||STAGES).map((s,i)=>{
     const v=p.stages[i],cls=v>=100?'done':v>0?'active':'wait';
     const st=v>=100?'Tamamlandı':v>0?'Devam ediyor':'Bekliyor';
     return `<li class="stage ${cls}" style="--i:${i}">
@@ -607,7 +614,7 @@ function panel(p){
     </div>
     <div class="detail">
       <div class="ttl"><h2>${p.title}</h2><span class="tag">${p.ada} ada, ${p.parsel} parsel</span></div>
-      <p class="where">${p.mahalle}</p>
+      ${p.mahalle?`<p class="where">${p.mahalle}</p>`:''}
       <ol class="stages">${rows}</ol>
       ${payHtml(p)}
       ${p.note?`<div class="note"><b>Ofis notu</b>${p.note}</div>`:''}
