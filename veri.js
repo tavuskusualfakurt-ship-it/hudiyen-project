@@ -26,7 +26,7 @@ const PROJECTS = [
    payNotes:{3:"Araştırma çukuru için 45.000 ₺ (kepçe dahil değildir). Sondaj yapılırsa 100.000 ₺."},
    note:"Zemin etüdü bedeli araştırma çukuru esas alınarak yazılmıştır. Sondaj yapılması durumunda 100.000 ₺ olur. Kepçe bedeli ayrıca ödenir."},
   {ada:604, parsel:44, mahalle:"Örnek Mah. / Kadıköy", title:"Yıldız Evleri, 6 katlı konut",
-   stages:[100,100,100,70,40,0,0], updated:"2026-10-05",
+   stages:[0,0,0,0,0,0,0], updated:"2026-10-05",
    docs:{1:[{n:"Rölöve",f:"belgeler/604-44-k7x2m9/rolove.pdf"},{n:"Rölöve",f:"belgeler/604-44-k7x2m9/rolove.dwg"}],2:[{n:"Avan proje",f:"belgeler/604-44-k7x2m9/avan-proje.pdf"},{n:"Avan proje",f:"belgeler/604-44-k7x2m9/avan-proje.dwg"}]},
    pay:[[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]],
    note:"Statik proje için mühendis ile koordinasyon sürüyor. Uygulama paftaları bu hafta tamamlanacak."},
