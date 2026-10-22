@@ -20,9 +20,9 @@ const PAY_ITEMS = ["Harita", "Mimari proje", "Elektrik projesi", "Mekanik projes
 const PROJECTS = [
   {ada:156, parsel:2, mahalle:"", title:"GARAJ YAPIMI",
    stagesDef:[{n:"Harita",w:15},{n:"Mimari",w:25},{n:"Statik",w:15},{n:"Zemin etüdü",w:10},{n:"Elektrik",w:10},{n:"Mekanik",w:10},{n:"Belediye harçları",w:15}],
-   stages:[0,0,0,0,0,0,0], updated:"2026-10-16",
+   stages:[15,0,0,0,0,0,0], updated:"2026-10-16",
    payItems:["Harita","Mimari","Statik","Zemin etüdü","Elektrik","Mekanik","Belediye harçları"],
-   pay:[[0,45000],[0,70000],[0,55000],[0,60000],[0,25000],[0,15000],null],
+   pay:[[11000,45000],[0,70000],[0,55000],[0,60000],[0,25000],[0,15000],null],
    payNotes:{3:"Araştırma çukuru için 60.000 ₺ (kepçe dahil değildir). Sondaj yapılırsa 100.000 ₺."},
    note:"Zemin etüdü bedeli araştırma çukuru esas alınarak yazılmıştır. Sondaj yapılması durumunda 100.000 ₺ olur. Kepçe bedeli ayrıca ödenir."},
   {ada:604, parsel:44, mahalle:"Örnek Mah. / Kadıköy", title:"Yıldız Evleri, 6 katlı konut",
